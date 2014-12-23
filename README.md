@@ -21,7 +21,7 @@ of *Easy, Medium, Hard,* or, for the ColorKu super-heroes
 among us, *Evil* (bwa ha ha).
 
 SpudoKu can also show you the complete solution to the ColorKu puzzle
-by clicking the "Solved" button, or it can show you the solution
+by clicking the "Show Solution" button, or it can show you the solution
 of each ball individually by clicking on that ball.
 
 **In the works:** I intend to hook SpudoKu up to my sudoku solver
