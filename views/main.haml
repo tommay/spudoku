@@ -87,12 +87,9 @@
                         %td
                           .ball{id: "b#{n}", data: {setup_color: colors[n][:setup] || "#f8f8f8", solved_color: colors[n][:solved]}}
 
-      %button{onclick: "ku_show_setup_all()"}
-        Setup
-      %button{onclick: "ku_show_solved_all()"}
-        Solved
-      %button{onclick: "ku_new_puzzle()"}
-        New
+      %button{onclick: "ku_show_setup_all()"} Show Setup
+      %button{onclick: "ku_show_solved_all()"} Show Solution
+      %button{onclick: "ku_new_puzzle()"} New Puzzle
 
       Difficulty:
       %select{id: "level"}
