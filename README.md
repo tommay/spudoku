@@ -11,11 +11,12 @@ bunny chewed them up?  That's where *SpudoKu* can help!
 
 **SpudoKu?  What's that?**
 
-This website is SpudoKu!  SpudoKu
-can fetch billions of puzzles from the fine folks at
+You're looking at it!  SpudoKu is a website that
+can fetch billions of sudoku puzzles from the fine folks at
 [websudoku.com](http://websudoku.com/) (thanks,
-fine folks!) and display them in your browser with all the ColorKu
-colors you've come to know and love!  Puzzles come in your choice
+fine folks!) and display them in your browser with the ColorKu
+colors you've come to know and love, so you can set them up
+on your ColorKu board and solve them!  Puzzles come in your choice
 of *Easy, Medium, Hard,* or, for the ColorKu super-heroes
 among us, *Evil* (bwa ha ha).
 
