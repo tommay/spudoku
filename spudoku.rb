@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
 
+require "net/http"
 require "rubygems"
 require "sinatra"
 require "haml"
-require "net/http"
+require "redcarpet"
 
 # I think it's a terrible idea for DOM/JS to alter data-* names by
 # camelcasing.  It maeans you have to search code for two names.  Haml
