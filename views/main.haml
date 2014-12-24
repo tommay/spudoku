@@ -26,36 +26,28 @@
 
     :javascript
       window.onload = function () {
-        var n;
-        for (n = 0; n < 81; n++) {
-          var elm = document.getElementById("b" + n);
-          ku_show_setup(elm);
-          elm.onclick = function(event) {
-            var target = event.target;
-            if (target.ku_showing_solved) {
-              ku_show_setup(target);
-            }
-            else {
-              ku_show_solved(target);
+        each_ball(
+          function(elm) {
+            ku_show_setup(elm);
+            elm.onclick = function(event) {
+              var target = event.target;
+              if (target.ku_showing_solved) {
+                ku_show_setup(target);
+              }
+              else {
+                ku_show_solved(target);
+              }
             }
           }
-        }
+        )
       }
 
-      function ku_all(func) {
+      function each_ball(func) {
+        var balls = document.getElementsByClassName("ball");
         var n;
-        for (n = 0; n < 81; n++) {
-          var elm = document.getElementById("b" + n);
-          func(elm);
+        for (n = 0; n < balls.length; n++) {
+          func(balls[n]);
         }
-      }
-
-      function ku_show_setup_all() {
-        ku_all(ku_show_setup);
-      }
-
-      function ku_show_solved_all() {
-        ku_all(ku_show_solved);
       }
 
       function ku_show_setup(elm) {
@@ -85,10 +77,10 @@
                       - 3.times do |sub_col|
                         - n = ((row*3)+sub_row)*9 + col*3 + sub_col
                         %td
-                          .ball{id: "b#{n}", data: {setup_color: colors[n][:setup] || "#f8f8f8", solved_color: colors[n][:solved]}}
+                          .ball{data: {setup_color: colors[n][:setup] || "#f8f8f8", solved_color: colors[n][:solved]}}
 
-      %button{onclick: "ku_show_setup_all()"} Show Setup
-      %button{onclick: "ku_show_solved_all()"} Show Solution
+      %button{onclick: "each_ball(ku_show_setup)"} Show Setup
+      %button{onclick: "each_ball(ku_show_solved)"} Show Solution
       %button{onclick: "ku_new_puzzle()"} New Puzzle
 
       Difficulty:
