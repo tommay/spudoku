@@ -48,6 +48,10 @@ get "/" do
   haml :main, locals: {level: level, colors: colors}
 end
 
+error do
+  "Well that didn't work.  It's not your fault.  And it's not my fault either.  Well, probably not.  I recommend you #{link_to("Try Again", request.url)}."
+end
+
 # Map sudoku numbers to ColorKu colors.  The floats are an artifact of
 # another implementation and it's convenient for me to leave them that
 # way.  But for this implementation, map them to hex color strings
@@ -93,27 +97,26 @@ module WebSudoku
     page =~ %r{<input id="editmask" [^>]* value="([01]*)">}i
     editmask = $1
 
+    if !(solved && editmask)
+      raise "Couldn't find the puzzle in the page."
+    end
+
     [solved, editmask]
   end
 
   def self.get_page(page)
-    3.times do
-      begin
-        response = Net::HTTP.get_response(URI.parse(page))
-        case response
-        when Net::HTTPOK
-          return response.body.to_s
-        when Net::HTTPNotFound
-          return nil
-        when Net::HTTPRedirection
-          return get_page(response['Location'])
-        else
-          puts "HTTP problem: #{page}: #{response.code} #{response.message}"
-        end
-      rescue => ex
-        puts "HTTP problem: #{page}: #{ex.inspect}"
-      end
+    response = begin
+      Net::HTTP.get_response(URI.parse(page))
+    rescue => ex
+      raise "HTTP problem: #{page}: #{ex.inspect}"
     end
-    nil
+    case response
+    when Net::HTTPOK
+      response.body.to_s
+    when Net::HTTPRedirection
+      get_page(response['Location'])
+    else
+      raise "HTTP problem: #{page}: #{response.code} #{response.message}"
+    end
   end
 end
