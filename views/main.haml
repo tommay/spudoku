@@ -45,7 +45,7 @@
 
       function each_ball(func) {
         var balls = document.getElementsByClassName("ball");
-        for (var n = 0; n < balls.length; n++) {
+        for (var n in balls) {
           func(balls[n]);
         }
       }
