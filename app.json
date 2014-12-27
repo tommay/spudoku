@@ -1,0 +1,11 @@
+{
+  "name": "ColorKu Puzzle Fetcher",
+  "description": "Fetches and displays billions of ColorKu puzzles, with solutions.",
+  "keywords": [
+    "ColorKu",
+    "sudoku",
+    "games",
+  ],
+  "repository": "https://github.com/tommay/spudoku.git",
+  "success_url": "/",
+}
