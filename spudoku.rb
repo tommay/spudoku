@@ -19,7 +19,13 @@ helpers do
   def link_to(text, href)
     "<a href='#{href}'>#{text}</a>"
   end
+
+  def snip(text)
+    text =~ /(.*)^.*Snip.*/m
+    $1
+  end
 end
+
 
 get "/" do
   level = params[:level] || "1"

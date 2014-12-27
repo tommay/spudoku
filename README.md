@@ -29,3 +29,8 @@ to provide *hints* for when you get stuck.
 
 **And then . . .** I'd like to do an Android app.  If you're on
 iPhone, sorry.  If you're on BlackBerry, I'm even sorrier.
+
+<!--- Snip -->
+
+Want your own deployment of ColorKu?<br/>
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
