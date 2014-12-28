@@ -22,7 +22,7 @@ helpers do
 
   def snip(text)
     text =~ /(.*)^.*Snip.*/m
-    $1
+    $1 || text
   end
 end
 
