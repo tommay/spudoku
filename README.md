@@ -32,5 +32,7 @@ iPhone, sorry.  If you're on BlackBerry, I'm even sorrier.
 
 <!--- Snip -->
 
-Want your own deployment of ColorKu?<br/>
+Want to see SpudoKu in action?  [Here you go](http://spudoku.tommay.net).
+
+Want your own deployment of SpudoKu?  It's just a click away:
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
