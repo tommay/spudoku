@@ -10,9 +10,8 @@
       body {
         background-color: linen;
       }
-      #left {
-        float: left;
-        margin-right: 20px;
+      .top {
+        vertical-align: top;
       }
       .square {
         margin: 3px;
@@ -65,33 +64,39 @@
       }
 
   %body
-    #left
-      %table{style: "margin-bottom: 5px"}
-        - 3.times do |row|
-          %tr
-            - 3.times do |col|
-              %td
-                %table.square
-                  - 3.times do |sub_row|
-                    %tr
-                      - 3.times do |sub_col|
-                        - n = ((row*3)+sub_row)*9 + col*3 + sub_col
-                        %td
-                          .ball{data: {setup_color: colors[n][:setup] || "#f8f8f8", solved_color: colors[n][:solved]}}
+    -# Yes, I'm using a one-row two-column table for layout.  Shoot
+    -# me.  It's easier than going through the heroics that the CSS
+    -# jedis cook up to try to coerce CSS into doing such a simple
+    -# thing.
+    %table
+      %tr
+        %td.top
+          %table(style="margin-bottom: 5px")
+            - 3.times do |row|
+              %tr
+                - 3.times do |col|
+                  %td
+                    %table.square
+                      - 3.times do |sub_row|
+                        %tr
+                          - 3.times do |sub_col|
+                            - n = ((row*3)+sub_row)*9 + col*3 + sub_col
+                            %td
+                              .ball{data: {setup_color: colors[n][:setup] || "#f8f8f8", solved_color: colors[n][:solved]}}
 
-      %button{onclick: "each_ball(ku_show_setup)"} Show Setup
-      %button{onclick: "each_ball(ku_show_solved)"} Show Solution
-      %button{onclick: "ku_new_puzzle()"} New Puzzle
+          %button{onclick: "each_ball(ku_show_setup)"} Show Setup
+          %button{onclick: "each_ball(ku_show_solved)"} Show Solution
+          %button{onclick: "ku_new_puzzle()"} New Puzzle
 
-      Difficulty:
-      %select{id: "level"}
-        - WebSudoku::LEVELS.each do |text, number|
-          %option{value: number, selected: number == level}
-            = text
-
-    %div{style: "padding-top: 3px"}
-      = snip(markdown :"../README")
-      SpudoKu is hosted on
-      #{link_to("Heroku", "http://www.heroku.com/")},
-      and hackable on
-      #{link_to("GitHub", "https://github.com/tommay/spudoku")}.
+          Difficulty:
+          %select{id: "level"}
+            - WebSudoku::LEVELS.each do |text, number|
+              %option{value: number, selected: number == level}
+                = text
+        %td.top
+          %div(style="margin-left: 20px; width: 80%")
+            = snip(markdown :"../README")
+            SpudoKu is hosted on
+            #{link_to("Heroku", "http://www.heroku.com/")},
+            and hackable on
+            #{link_to("GitHub", "https://github.com/tommay/spudoku")}.
