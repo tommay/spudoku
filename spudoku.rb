@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 
 require "net/http"
+
 require "rubygems"
+require "bundler/setup"
 require "sinatra"
 require "haml"
 require "redcarpet"
