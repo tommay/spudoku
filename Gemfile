@@ -6,3 +6,5 @@ gem "thin"
 gem "sinatra"
 gem "haml"
 gem "redcarpet"
+gem "newrelic_rpm"
+
