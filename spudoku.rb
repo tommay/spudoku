@@ -4,7 +4,7 @@ require "net/http"
 
 require "rubygems"
 require "bundler/setup"
-require "sinatra"
+require "async_sinatra"
 require "haml"
 require "redcarpet"
 
@@ -18,6 +18,8 @@ Haml::Options.defaults[:hyphenate_data_attrs] = false
 Haml::Options.defaults[:format] = :html5
 
 class Spudoku < Sinatra::Base
+  register Sinatra::Async
+
   helpers do
     def link_to(text, href)
       "<a href='#{href}'>#{text}</a>"
@@ -29,7 +31,7 @@ class Spudoku < Sinatra::Base
     end
   end
 
-  get "/" do
+  aget "/" do
     level = params[:level] || "1"
     
     # Fetch a random puzzle of the requested level.
@@ -53,7 +55,7 @@ class Spudoku < Sinatra::Base
     
     # Render the page.
     
-    haml :main, locals: {level: level, colors: colors}
+    body haml :main, locals: {level: level, colors: colors}
   end
 
   error do
