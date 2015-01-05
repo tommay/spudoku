@@ -5,6 +5,7 @@ require "net/http"
 require "rubygems"
 require "bundler/setup"
 require "async_sinatra"
+require "em-http-request"
 require "haml"
 require "redcarpet"
 
@@ -36,26 +37,26 @@ class Spudoku < Sinatra::Base
     
     # Fetch a random puzzle of the requested level.
     
-    solved, editmask = WebSudoku.get_puzzle(level)
+    WebSudoku.get_puzzle(level) do |solved, editmask|
+      # Turn the strings into something more usable: an array of colors
+      # strings, and an array of booleans, true if the position is part of
+      # the setup.
     
-    # Turn the strings into something more usable: an array of colors
-    # strings, and an array of booleans, true if the position is part of
-    # the setup.
+      colors = solved.each_char.map{|c| COLORS[c.to_i - 1]}
+      setup = editmask.each_char.map{|x| x == "0"}
     
-    colors = solved.each_char.map{|c| COLORS[c.to_i - 1]}
-    setup = editmask.each_char.map{|x| x == "0"}
+      # Set up the colors array to pass to the view: each position gets a
+      # hash with its setup color or nil if the position is not part of
+      # the setup, and its solved color.
     
-    # Set up the colors array to pass to the view: each position gets a
-    # hash with its setup color or nil if the position is not part of
-    # the setup, and its solved color.
+      colors = colors.zip(setup).map do |color, setup|
+        {setup: setup ? color : nil, solved: color}
+      end
     
-    colors = colors.zip(setup).map do |color, setup|
-      {setup: setup ? color : nil, solved: color}
+      # Render the page.
+    
+      body haml :main, locals: {level: level, colors: colors}
     end
-    
-    # Render the page.
-    
-    body haml :main, locals: {level: level, colors: colors}
   end
 
   error do
@@ -94,40 +95,46 @@ module WebSudoku
   # the second is digits 0 and 1 for whether the position is part of
   # the setup ("0") or is to be solved for ("1").
 
-  def self.get_puzzle(level, puzzle_number = nil)
+  def self.get_puzzle(level, puzzle_number = nil, &block)
     set_id = puzzle_number && "&set_id=#{puzzle_number}"
-    page = get_page("http://view.websudoku.com/?level=#{level}#{set_id}")
+    get_page("http://view.websudoku.com/?level=#{level}#{set_id}") do |page|
+      # "solved" is the solution
 
-    # "solved" is the solution
+      page =~ %r{cheat='([1-9]*)'}
+      solved = $1
 
-    page =~ %r{cheat='([1-9]*)'}
-    solved = $1
+      # "editmask" has a "0" for each fixed value
 
-    # "editmask" has a "0" for each fixed value
+      page =~ %r{<input id="editmask" [^>]* value="([01]*)">}i
+      editmask = $1
 
-    page =~ %r{<input id="editmask" [^>]* value="([01]*)">}i
-    editmask = $1
+      if !(solved && editmask)
+        raise "Couldn't find the puzzle in the page."
+      end
 
-    if !(solved && editmask)
-      raise "Couldn't find the puzzle in the page."
+      block.call(solved, editmask)
     end
-
-    [solved, editmask]
   end
 
-  def self.get_page(page)
-    response = begin
-      Net::HTTP.get_response(URI.parse(page))
-    rescue => ex
-      raise "HTTP problem: #{page}: #{ex.inspect}"
+  def self.get_page(page, &block)
+    EventMachine::HttpRequest.new(page).get.tap do |http|
+      http.callback do
+        block.call(http.response)
+      end
     end
-    case response
-    when Net::HTTPOK
-      response.body.to_s
-    when Net::HTTPRedirection
-      get_page(response['Location'])
-    else
-      raise "HTTP problem: #{page}: #{response.code} #{response.message}"
-    end
+
+#    response = begin
+#      Net::HTTP.get_response(URI.parse(page))
+#    rescue => ex
+#      raise "HTTP problem: #{page}: #{ex.inspect}"
+#    end
+#    case response
+#    when Net::HTTPOK
+#      response.body.to_s
+#    when Net::HTTPRedirection
+#      get_page(response['Location'])
+#    else
+#      raise "HTTP problem: #{page}: #{response.code} #{response.message}"
+#    end
   end
 end
