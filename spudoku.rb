@@ -1,7 +1,5 @@
 #!/usr/bin/env rackup
 
-require "net/http"
-
 require "rubygems"
 require "bundler/setup"
 require "async_sinatra"
