@@ -1,3 +1,3 @@
 require_relative "spudoku"
 
-run Sinatra::Application
+run Spudoku.new

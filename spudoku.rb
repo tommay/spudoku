@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env rackup
 
 require "net/http"
 
@@ -17,65 +17,66 @@ require "redcarpet"
 Haml::Options.defaults[:hyphenate_data_attrs] = false
 Haml::Options.defaults[:format] = :html5
 
-helpers do
-  def link_to(text, href)
-    "<a href='#{href}'>#{text}</a>"
+class Spudoku < Sinatra::Base
+  helpers do
+    def link_to(text, href)
+      "<a href='#{href}'>#{text}</a>"
+    end
+
+    def snip(text)
+      text =~ /(.*)^.*Snip.*/m
+      $1 || text
+    end
   end
 
-  def snip(text)
-    text =~ /(.*)^.*Snip.*/m
-    $1 || text
-  end
-end
-
-
-get "/" do
-  level = params[:level] || "1"
-
-  # Fetch a random puzzle of the requested level.
-
-  solved, editmask = WebSudoku.get_puzzle(level)
-
-  # Turn the strings into something more usable: an array of colors
-  # strings, and an array of booleans, true if the position is part of
-  # the setup.
-
-  colors = solved.each_char.map{|c| COLORS[c.to_i - 1]}
-  setup = editmask.each_char.map{|x| x == "0"}
-
-  # Set up the colors array to pass to the view: each position gets a
-  # hash with its setup color or nil if the position is not part of
-  # the setup, and its solved color.
-
-  colors = colors.zip(setup).map do |color, setup|
-    {setup: setup ? color : nil, solved: color}
+  get "/" do
+    level = params[:level] || "1"
+    
+    # Fetch a random puzzle of the requested level.
+    
+    solved, editmask = WebSudoku.get_puzzle(level)
+    
+    # Turn the strings into something more usable: an array of colors
+    # strings, and an array of booleans, true if the position is part of
+    # the setup.
+    
+    colors = solved.each_char.map{|c| COLORS[c.to_i - 1]}
+    setup = editmask.each_char.map{|x| x == "0"}
+    
+    # Set up the colors array to pass to the view: each position gets a
+    # hash with its setup color or nil if the position is not part of
+    # the setup, and its solved color.
+    
+    colors = colors.zip(setup).map do |color, setup|
+      {setup: setup ? color : nil, solved: color}
+    end
+    
+    # Render the page.
+    
+    haml :main, locals: {level: level, colors: colors}
   end
 
-  # Render the page.
+  error do
+    "Well that didn't work.  It's not your fault.  And it's not my fault either.  Well, probably not.  I recommend you #{link_to("Try Again", request.url)}."
+  end
 
-  haml :main, locals: {level: level, colors: colors}
-end
+  # Map sudoku numbers to ColorKu colors.  The floats are an artifact
+  # of another implementation and it's convenient for me to leave them
+  # that way.  But for this implementation, map them to hex color
+  # strings "#rrggbb".
 
-error do
-  "Well that didn't work.  It's not your fault.  And it's not my fault either.  Well, probably not.  I recommend you #{link_to("Try Again", request.url)}."
-end
-
-# Map sudoku numbers to ColorKu colors.  The floats are an artifact of
-# another implementation and it's convenient for me to leave them that
-# way.  But for this implementation, map them to hex color strings
-# "#rrggbb".
-
-COLORS = [[1.00, 0.00, 0.00],  # red
-          [1.00, 0.60, 0.00],  # orange
-          [1.00, 1.00, 0.00],  # yellow
-          [0.20, 0.80, 0.20],  # light green
-          [0.00, 0.35, 0.00],  # dark green
-          [0.43, 0.71, 0.98],  # light blue
-          [0.00, 0.00, 0.80],  # dark blue
-          [0.93, 0.51, 0.93],  # lavender
-          [0.40, 0.00, 0.51],  # purple
-         ].map do |color|
-  "#%02x%02x%02x" % color.map{|n| n * 255}
+  COLORS = [[1.00, 0.00, 0.00],  # red
+            [1.00, 0.60, 0.00],  # orange
+            [1.00, 1.00, 0.00],  # yellow
+            [0.20, 0.80, 0.20],  # light green
+            [0.00, 0.35, 0.00],  # dark green
+            [0.43, 0.71, 0.98],  # light blue
+            [0.00, 0.00, 0.80],  # dark blue
+            [0.93, 0.51, 0.93],  # lavender
+            [0.40, 0.00, 0.51],  # purple
+           ].map do |color|
+    "#%02x%02x%02x" % color.map{|n| n * 255}
+  end
 end
 
 # WebSudoku is just some stuff for fetching data from websudoku.com.
