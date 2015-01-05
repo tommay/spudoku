@@ -8,3 +8,7 @@ gem "haml"
 gem "redcarpet"
 gem "newrelic_rpm"
 
+group :development do
+  gem "heroku"
+  gem "byebug"
+end
