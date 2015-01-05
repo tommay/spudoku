@@ -4,6 +4,7 @@ ruby "2.1.5"
 
 gem "thin"
 gem "async_sinatra"
+gem "em-http-request"
 gem "haml"
 gem "redcarpet"
 gem "newrelic_rpm"

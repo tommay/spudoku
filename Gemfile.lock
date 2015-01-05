@@ -10,8 +10,17 @@ GEM
       debugger-linecache (~> 1.2)
       slop (~> 3.6)
     columnize (0.9.0)
+    cookiejar (0.3.2)
     daemons (1.1.9)
     debugger-linecache (1.2.0)
+    em-http-request (1.1.2)
+      addressable (>= 2.3.4)
+      cookiejar
+      em-socksify (>= 0.3)
+      eventmachine (>= 1.0.3)
+      http_parser.rb (>= 0.6.0)
+    em-socksify (0.3.0)
+      eventmachine (>= 1.0.0.beta.4)
     eventmachine (1.0.4)
     excon (0.42.1)
     haml (4.0.6)
@@ -26,6 +35,7 @@ GEM
     heroku-api (0.3.22)
       excon (~> 0.38)
       multi_json (~> 1.8)
+    http_parser.rb (0.6.0)
     launchy (2.4.3)
       addressable (~> 2.3)
     mime-types (2.4.3)
@@ -56,6 +66,7 @@ PLATFORMS
 DEPENDENCIES
   async_sinatra
   byebug
+  em-http-request
   haml
   heroku
   newrelic_rpm
