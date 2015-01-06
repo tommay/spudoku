@@ -1,5 +1,7 @@
 #!/usr/bin/env rackup
 
+require "fiber"
+
 require "rubygems"
 require "bundler/setup"
 require "async_sinatra"
@@ -31,30 +33,32 @@ class Spudoku < Sinatra::Base
   end
 
   aget "/" do
-    level = params[:level] || "1"
-    
-    # Fetch a random puzzle of the requested level.
-    
-    WebSudoku.get_puzzle(level) do |solved, editmask|
+    Fiber.new do
+      level = params[:level] || "1"
+
+      # Fetch a random puzzle of the requested level.
+
+      solved, editmask = WebSudoku.get_puzzle(level)
+
       # Turn the strings into something more usable: an array of colors
       # strings, and an array of booleans, true if the position is part of
       # the setup.
-    
+
       colors = solved.each_char.map{|c| COLORS[c.to_i - 1]}
       setup = editmask.each_char.map{|x| x == "0"}
-    
+
       # Set up the colors array to pass to the view: each position gets a
       # hash with its setup color or nil if the position is not part of
       # the setup, and its solved color.
-    
+
       colors = colors.zip(setup).map do |color, setup|
         {setup: setup ? color : nil, solved: color}
       end
-    
+
       # Render the page.
-    
+
       body haml :main, locals: {level: level, colors: colors}
-    end
+    end.resume
   end
 
   error do
@@ -95,31 +99,45 @@ module WebSudoku
 
   def self.get_puzzle(level, puzzle_number = nil, &block)
     set_id = puzzle_number && "&set_id=#{puzzle_number}"
-    get_page("http://view.websudoku.com/?level=#{level}#{set_id}") do |page|
-      # "solved" is the solution
+    page = get_page("http://view.websudoku.com/?level=#{level}#{set_id}")
 
-      page =~ %r{cheat='([1-9]*)'}
-      solved = $1
+    # "solved" is the solution
 
-      # "editmask" has a "0" for each fixed value
+    page =~ %r{cheat='([1-9]*)'}
+    solved = $1
 
-      page =~ %r{<input id="editmask" [^>]* value="([01]*)">}i
-      editmask = $1
+    # "editmask" has a "0" for each fixed value
 
-      if !(solved && editmask)
-        raise "Couldn't find the puzzle in the page."
-      end
+    page =~ %r{<input id="editmask" [^>]* value="([01]*)">}i
+    editmask = $1
 
-      block.call(solved, editmask)
+    if !(solved && editmask)
+      raise "Couldn't find the puzzle in the page."
     end
+
+    [solved, editmask]
   end
 
-  def self.get_page(page, &block)
-    http = EventMachine::HttpRequest.new(page).get(
-      head: {"accept-encoding" => "gzip, compressed"})
-    http.callback do
-      block.call(http.response)
+  def self.get_page(page)
+    http = sync do
+      EventMachine::HttpRequest.new(page).get(
+        head: {"accept-encoding" => "gzip, compressed"})
     end
+
+    http.response
+  end
+
+  def self.sync(&block)
+    f = Fiber.current
+
+    deferrable = block.call
+
+    deferrable.callback {f.resume}
+    deferrable.errback {f.resume}
+
+    Fiber.yield
+
+    deferrable
   end
 
 #    response = begin
