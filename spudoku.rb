@@ -111,7 +111,7 @@ module WebSudoku
   # the second is digits 0 and 1 for whether the position is part of
   # the setup ("0") or is to be solved for ("1").
 
-  def self.get_puzzle(level, puzzle_number = nil, &block)
+  def self.get_puzzle(level, puzzle_number = nil)
     set_id = puzzle_number && "&set_id=#{puzzle_number}"
     page = get_page("http://view.websudoku.com/?level=#{level}#{set_id}")
 
