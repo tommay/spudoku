@@ -21,6 +21,23 @@ Haml::Options.defaults[:format] = :html5
 class Spudoku < Sinatra::Base
   register Sinatra::Async
 
+  # Make exceptions come out in the log, not the response.
+
+  set :show_exceptions, false
+
+  # Run the route handler in a Fiber and call body with a block which
+  # makes sinatra handle exceptions and use our error handler.
+
+  def self.fget(*args, &block)
+    aget(*args) do
+      Fiber.new do
+        body do
+          instance_eval(&block)
+        end
+      end.resume
+    end
+  end
+
   helpers do
     def link_to(text, href)
       "<a href='#{href}'>#{text}</a>"
@@ -32,33 +49,30 @@ class Spudoku < Sinatra::Base
     end
   end
 
-  aget "/" do
-    Fiber.new do
-      level = params[:level] || "1"
+  fget "/" do
+    level = params[:level] || "1"
 
-      # Fetch a random puzzle of the requested level.
+    # Fetch a random puzzle of the requested level.
 
-      solved, editmask = WebSudoku.get_puzzle(level)
+    solved, editmask = WebSudoku.get_puzzle(level)
 
-      # Turn the strings into something more usable: an array of colors
-      # strings, and an array of booleans, true if the position is part of
-      # the setup.
+    # Turn the strings into something more usable: an array of colors
+    # strings, and an array of booleans, true if the position is part of
+    # the setup.
 
-      colors = solved.each_char.map{|c| COLORS[c.to_i - 1]}
-      setup = editmask.each_char.map{|x| x == "0"}
+    colors = solved.each_char.map{|c| COLORS[c.to_i - 1]}
+    setup = editmask.each_char.map{|x| x == "0"}
 
-      # Set up the colors array to pass to the view: each position gets a
-      # hash with its setup color or nil if the position is not part of
-      # the setup, and its solved color.
+    # Set up the colors array to pass to the view: each position gets a
+    # hash with its setup color or nil if the position is not part of
+    # the setup, and its solved color.
 
-      colors = colors.zip(setup).map do |color, setup|
-        {setup: setup ? color : nil, solved: color}
-      end
+    colors = colors.zip(setup).map do |color, setup|
+      {setup: setup ? color : nil, solved: color}
+    end
 
-      # Render the page.
-
-      body haml :main, locals: {level: level, colors: colors}
-    end.resume
+    # Render the page.
+    haml :main, locals: {level: level, colors: colors}
   end
 
   error do
@@ -124,6 +138,14 @@ module WebSudoku
         head: {"accept-encoding" => "gzip, compressed"})
     end
 
+    if http.error
+      raise "HTTP problem: #{page}: #{http.error}"
+    end
+
+    if http.response_header.http_status != 200
+      raise "HTTP problem: #{page}: #{http.response_header.http_status} #{http.response_header.http_reason}"
+    end
+
     http.response
   end
 
@@ -139,18 +161,4 @@ module WebSudoku
 
     deferrable
   end
-
-#    response = begin
-#      Net::HTTP.get_response(URI.parse(page))
-#    rescue => ex
-#      raise "HTTP problem: #{page}: #{ex.inspect}"
-#    end
-#    case response
-#    when Net::HTTPOK
-#      response.body.to_s
-#    when Net::HTTPRedirection
-#      get_page(response['Location'])
-#    else
-#      raise "HTTP problem: #{page}: #{response.code} #{response.message}"
-#    end
 end
