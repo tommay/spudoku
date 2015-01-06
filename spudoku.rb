@@ -115,11 +115,12 @@ module WebSudoku
   end
 
   def self.get_page(page, &block)
-    EventMachine::HttpRequest.new(page).get.tap do |http|
-      http.callback do
-        block.call(http.response)
-      end
+    http = EventMachine::HttpRequest.new(page).get(
+      head: {"accept-encoding" => "gzip, compressed"})
+    http.callback do
+      block.call(http.response)
     end
+  end
 
 #    response = begin
 #      Net::HTTP.get_response(URI.parse(page))
@@ -134,5 +135,4 @@ module WebSudoku
 #    else
 #      raise "HTTP problem: #{page}: #{response.code} #{response.message}"
 #    end
-  end
 end
