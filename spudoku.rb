@@ -4,7 +4,7 @@ require "fiber"
 
 require "rubygems"
 require "bundler/setup"
-require "async_sinatra"
+require "sinatra/async"
 require "em-http-request"
 require "haml"
 require "redcarpet"
