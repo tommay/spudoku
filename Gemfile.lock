@@ -9,6 +9,7 @@ GEM
     columnize (0.9.0)
     debugger-linecache (1.2.0)
     excon (0.42.1)
+    form_data (0.1.0)
     haml (4.0.6)
       tilt
     heroku (3.21.4)
@@ -21,6 +22,10 @@ GEM
     heroku-api (0.3.22)
       excon (~> 0.38)
       multi_json (~> 1.8)
+    http (0.7.1)
+      form_data (~> 0.1.0)
+      http_parser.rb (~> 0.6.0)
+    http_parser.rb (0.6.0)
     launchy (2.4.3)
       addressable (~> 2.3)
     mime-types (2.4.3)
@@ -50,6 +55,7 @@ DEPENDENCIES
   byebug
   haml
   heroku
+  http
   newrelic_rpm
   puma
   redcarpet

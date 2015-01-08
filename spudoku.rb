@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby
 
-require "net/http"
-
 require "rubygems"
 require "bundler/setup"
 require "sinatra"
+require "http"
 require "haml"
 require "redcarpet"
 
@@ -114,17 +113,15 @@ module WebSudoku
 
   def self.get_page(page)
     response = begin
-      Net::HTTP.get_response(URI.parse(page))
+      HTTP.get(page, follow: true)
     rescue => ex
       raise "HTTP problem: #{page}: #{ex.inspect}"
     end
-    case response
-    when Net::HTTPOK
-      response.body.to_s
-    when Net::HTTPRedirection
-      get_page(response['Location'])
-    else
-      raise "HTTP problem: #{page}: #{response.code} #{response.message}"
+
+    if response.status_code != 200
+      raise "HTTP problem: #{page}: #{response.status}"
     end
+
+    response.to_s
   end
 end
