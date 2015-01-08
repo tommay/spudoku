@@ -136,10 +136,8 @@ module WebSudoku
     # didn't support readpartial and it looked like more trouble than
     # it was worth.
 
-    http = sync do
-      EventMachine::HttpRequest.new(page).get(
-        head: {"accept-encoding" => "gzip, compressed"})
-    end
+    http = sync EventMachine::HttpRequest.new(page).get(
+      head: {"accept-encoding" => "gzip, compressed"})
 
     if http.error
       raise "HTTP problem: #{page}: #{http.error}"
@@ -152,10 +150,8 @@ module WebSudoku
     http.response
   end
 
-  def self.sync(&block)
+  def self.sync(deferrable)
     f = Fiber.current
-
-    deferrable = block.call
 
     deferrable.callback {|*args|f.resume(*args)}
     deferrable.errback {|*args|f.resume(*args)}
