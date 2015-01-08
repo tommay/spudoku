@@ -157,11 +157,9 @@ module WebSudoku
 
     deferrable = block.call
 
-    deferrable.callback {f.resume}
-    deferrable.errback {f.resume}
+    deferrable.callback {|*args|f.resume(*args)}
+    deferrable.errback {|*args|f.resume(*args)}
 
     Fiber.yield
-
-    deferrable
   end
 end
