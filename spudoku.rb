@@ -131,6 +131,11 @@ module WebSudoku
   end
 
   def self.get_page(page)
+    # I tried doing this with the http gem like the master and angelo
+    # branches, and EventMachine::Synchrony::TCPSocket, but TCPSocket
+    # didn't support readpartial and it looked like more trouble than
+    # it was worth.
+
     http = sync do
       EventMachine::HttpRequest.new(page).get(
         head: {"accept-encoding" => "gzip, compressed"})
