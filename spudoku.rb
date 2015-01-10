@@ -104,15 +104,20 @@ end
 module WebSudoku
   LEVELS = {"Easy" => "1", "Medium" => "2", "Hard" => "3", "Evil" => "4"}
 
-  # Fetch a puzzle from websudoku.com.  Return two strings: the first
-  # is digits 1-9, one for each position left-to-right top-to-bottom,
-  # the second is digits 0 and 1 for whether the position is part of
-  # the setup ("0") or is to be solved for ("1").
+  # Fetch a puzzle of the given level from websudoku.com.  Return two
+  # strings: the first is digits 1-9, one for each position
+  # left-to-right top-to-bottom, the second is digits 0 and 1 for
+  # whether the position is part of the setup ("0") or is to be solved
+  # for ("1").
 
   def self.get_puzzle(level, puzzle_number = nil)
     set_id = puzzle_number && "&set_id=#{puzzle_number}"
     page = get_page("http://view.websudoku.com/?level=#{level}#{set_id}")
 
+    extract_puzzle(page)
+  end
+
+  def self.extract_puzzle(page)
     # "solved" is the solution
 
     page =~ %r{cheat='([1-9]*)'}
