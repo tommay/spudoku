@@ -16,7 +16,11 @@ require "redcarpet"
 Haml::Options.defaults[:hyphenate_data_attrs] = false
 Haml::Options.defaults[:format] = :html5
 
-helpers do
+# Put helper methods in a module so they're accessible to unit tests,
+# since Spudoku.new returns an instance of Sinatra::Wrapper which
+# leaves the Spudoku instance methods inacccessible.
+
+module Helpers
   def link_to(text, href)
     "<a href='#{href}'>#{text}</a>"
   end
@@ -27,6 +31,7 @@ helpers do
   end
 end
 
+helpers Helpers
 
 get "/" do
   level = params[:level] || "1"
