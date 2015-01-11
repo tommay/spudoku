@@ -13,3 +13,7 @@ group :development do
   gem "heroku"
   gem "byebug"
 end
+
+group :test do
+  gem "minitest"
+end
