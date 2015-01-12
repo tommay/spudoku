@@ -83,9 +83,6 @@ COLORS = [[1.00, 0.00, 0.00],  # red
 end
 
 # WebSudoku is just some stuff for fetching data from websudoku.com.
-# It should raise exceptions instead of using puts and returning nil,
-# and there should should be sensible exception handling such as
-# rendering an error page, etc.  But this isn't too far off for now.
 
 module WebSudoku
   LEVELS = {"Easy" => "1", "Medium" => "2", "Hard" => "3", "Evil" => "4"}
