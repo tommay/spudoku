@@ -2,8 +2,8 @@ source "https://rubygems.org"
 
 ruby "2.1.5"
 
-gem "angelo", github: "tommay/angelo", branch: "toplevel"
-gem "tilt", "~>2.0"  # angelo needs this but it's not in the gemspec.
+gem "angelo", github: "tommay/angelo", branch: "tilt-preload"
+#gem "angelo", path: "/home/tom/angelo"
 gem "http"
 gem "haml"
 gem "redcarpet"

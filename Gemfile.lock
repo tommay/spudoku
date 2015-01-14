@@ -1,11 +1,14 @@
 GIT
   remote: git://github.com/tommay/angelo.git
-  revision: 6435c4e89c8fdb8c4abf571e12aae616218c1e22
-  branch: toplevel
+  revision: 20ebe161fb0acbdf0cb8bf13cbe79f669633e50c
+  branch: tilt-preload
   specs:
-    angelo (0.3.3pre)
+    angelo (0.5.0pre)
       mime-types (~> 2.4)
+      mustermann (~> 0.4)
       reel (~> 0.5)
+      tilt (~> 2.0)
+      tilt-preload
 
 GEM
   remote: https://rubygems.org/
@@ -17,16 +20,16 @@ GEM
       slop (~> 3.6)
     celluloid (0.16.0)
       timers (~> 4.0.0)
-    celluloid-io (0.16.1)
+    celluloid-io (0.16.2)
       celluloid (>= 0.16.0)
-      nio4r (>= 1.0.0)
+      nio4r (>= 1.1.0)
     columnize (0.9.0)
     debugger-linecache (1.2.0)
-    excon (0.42.1)
+    excon (0.43.0)
     form_data (0.1.0)
     haml (4.0.6)
       tilt
-    heroku (3.21.4)
+    heroku (3.23.3)
       heroku-api (~> 0.3.19)
       launchy (>= 0.3.2)
       multi_json (~> 1.10.1)
@@ -46,6 +49,8 @@ GEM
     mime-types (2.4.3)
     minitest (5.5.1)
     multi_json (1.10.1)
+    mustermann (0.4.0)
+      tool (~> 0.2)
     netrc (0.10.2)
     nio4r (1.1.0)
     redcarpet (3.2.2)
@@ -60,9 +65,12 @@ GEM
     rubyzip (0.9.9)
     slop (3.6.0)
     tilt (2.0.1)
+    tilt-preload (0.0.0)
+      tilt (~> 2.0)
     timers (4.0.1)
       hitimes
-    websocket_parser (0.1.6)
+    tool (0.2.3)
+    websocket_parser (1.0.0)
 
 PLATFORMS
   ruby
@@ -75,4 +83,3 @@ DEPENDENCIES
   http
   minitest
   redcarpet
-  tilt (~> 2.0)
