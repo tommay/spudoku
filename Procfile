@@ -1,1 +1,1 @@
-web: ./spudoku.rb -p $PORT
+web: ./spudoku.rb -o 0.0.0.0 -p $PORT

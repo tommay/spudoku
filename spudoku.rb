@@ -2,7 +2,7 @@
 
 require "rubygems"
 require "bundler/setup"
-require "sinatra"
+require "angelo/main"
 require "http"
 require "haml"
 require "redcarpet"
@@ -33,6 +33,8 @@ end
 
 helpers Helpers
 
+report_errors!
+
 get "/" do
   level = params[:level] || "1"
 
@@ -60,9 +62,9 @@ get "/" do
   haml :main, locals: {level: level, colors: colors}
 end
 
-error do
-  "Well that didn't work.  It's not your fault.  And it's not my fault either.  Well, probably not.  I recommend you #{link_to("Try Again", request.url)}."
-end
+#error do
+#  "Well that didn't work.  It's not your fault.  And it's not my fault either.  Well, probably not.  I recommend you #{link_to("Try Again", request.url)}."
+#end
 
 # Map sudoku numbers to ColorKu colors.  The floats are an artifact of
 # another implementation and it's convenient for me to leave them that
@@ -120,7 +122,7 @@ module WebSudoku
 
   def self.get_page(page)
     response = begin
-      HTTP.get(page, follow: true)
+      HTTP.get(page, follow: true, socket_class: Celluloid::IO::TCPSocket)
     rescue => ex
       raise "HTTP problem: #{page}: #{ex.inspect}"
     end
