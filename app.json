@@ -6,6 +6,5 @@
     "sudoku",
     "games"
   ],
-  "repository": "https://github.com/tommay/spudoku.git",
   "success_url": "/"
 }
