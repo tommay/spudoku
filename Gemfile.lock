@@ -32,7 +32,6 @@ GEM
     minitest (5.5.1)
     multi_json (1.10.1)
     netrc (0.10.2)
-    newrelic_rpm (3.9.9.275)
     puma (2.10.2)
       rack (>= 1.1, < 2.0)
     rack (1.6.0)
@@ -58,7 +57,6 @@ DEPENDENCIES
   heroku
   http
   minitest
-  newrelic_rpm
   puma
   redcarpet
   sinatra
