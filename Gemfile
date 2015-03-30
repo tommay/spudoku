@@ -7,6 +7,7 @@ gem "sinatra"
 gem "http"
 gem "haml"
 gem "redcarpet"
+gem "tilt-preload"
 
 group :development do
   gem "heroku"

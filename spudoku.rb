@@ -6,6 +6,7 @@ require "sinatra"
 require "http"
 require "haml"
 require "redcarpet"
+require "tilt-preload"
 
 # I think it's a terrible idea for DOM/JS to alter data-* names by
 # camelcasing.  It maeans you have to search code for two names.  Haml
