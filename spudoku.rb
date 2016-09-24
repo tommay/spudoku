@@ -126,7 +126,7 @@ module WebSudoku
       raise "HTTP problem: #{page}: #{ex.inspect}"
     end
 
-    if response.status_code != 200
+    if response.code != 200
       raise "HTTP problem: #{page}: #{response.status}"
     end
 
