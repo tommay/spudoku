@@ -14,7 +14,6 @@ gem "redcarpet"
 gem "tilt-preload"
 
 group :development do
-  gem "heroku"
   gem "byebug"
 end
 
