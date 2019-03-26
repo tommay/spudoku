@@ -24,11 +24,15 @@ SpudoKu can also show you the complete solution to the ColorKu puzzle
 by clicking the "Show Solution" button, or it can show you the solution
 of each ball individually by clicking on that ball.
 
-**In the works:** I intend to hook SpudoKu up to my sudoku solver
-to provide *hints* for when you get stuck.
+**Get the Android app!**
 
-**And then . . .** I'd like to do an Android app.  If you're on
-iPhone, sorry.  If you're on BlackBerry, I'm even sorrier.
+I've made an Android app that creates ColorKu puzzles on your phone.
+You can solve them on your phone, or set them up and solve them on
+your ColorKu board.
+
+And if you get stuck, it can give you *hints*.
+
+Get it here: [Spudoku Android App](https://play.google.com/store/apps/details?id=net.tommay.spudoku.publish)
 
 <!--- Snip -->
 
