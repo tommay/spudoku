@@ -7,15 +7,15 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.5.2)
+    addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
-    byebug (10.0.2)
+    byebug (11.0.1)
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
     haml (5.0.4)
       temple (>= 0.8.0)
       tilt
-    http (4.0.0)
+    http (4.1.1)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
       http-form_data (~> 2.0)
@@ -27,17 +27,17 @@ GEM
     minitest (5.11.3)
     mustermann (1.0.3)
     public_suffix (3.0.3)
-    puma (3.12.0)
+    puma (3.12.1)
     rack (2.0.6)
-    rack-protection (2.0.4)
+    rack-protection (2.0.5)
       rack
     redcarpet (3.4.0)
-    sinatra (2.0.4)
+    sinatra (2.0.5)
       mustermann (~> 1.0)
       rack (~> 2.0)
-      rack-protection (= 2.0.4)
+      rack-protection (= 2.0.5)
       tilt (~> 2.0)
-    temple (0.8.0)
+    temple (0.8.1)
     tilt-preload (0.0.0)
       tilt (~> 2.0)
     unf (0.1.4)
@@ -59,7 +59,7 @@ DEPENDENCIES
   tilt-preload
 
 RUBY VERSION
-   ruby 2.4.1p111
+   ruby 2.6.2p47
 
 BUNDLED WITH
-   1.17.1
+   1.17.2
